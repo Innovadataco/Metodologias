@@ -1,0 +1,267 @@
+<!-- source: website/docs/reference/herramientas-reference.md -->
+# Built-in Herramientas Reference
+
+# Built-in Herramientas Reference
+
+This page documents Hermes' built-in herramientas, grouped by herramientaset. Availability varies by platform, credentials, and enabled herramientasets.
+
+**Quick counts (current registry):** ~71 herramientas — 10 browser herramientas (core) + 2 CDP-gated browser herramientas, 4 file herramientas, 4 Home Assistant herramientas, 2 terminal herramientas, 2 web herramientas, 5 Feishu herramientas, 7 Spotify herramientas (registered by the bundled `spotify` complemento), 5 Yuanbao herramientas, 9 kanban herramientas (registered when the kanban dispatcher spawns the agente), 2 Discord herramientas, and a handful of standalone herramientas (`memoria`, `clarify`, `delegate_task`, `execute_code`, `cronjob`, `session_search`, `habilidad_view`/`habilidad_manage`/`habilidads_list`, `text_to_speech`, `image_generate`, `video_generate`, `vision_analyze`, `video_analyze`, `mixture_of_agentes`, `send_message`, `todo`, `computer_use`, `process`).
+
+:::tip MCP Herramientas
+In addition to built-in herramientas, Hermes can load herramientas dynamically from MCP servers. MCP herramientas appear with the prefix `mcp_<server>_` (e.g., `mcp_github_create_issue` for the `github` MCP server). See [MCP Integration](/guia-usuario/features/mcp) for configuración.
+:::
+
+## `browser` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `browser_back` | Navigate back to the previous page in browser history. Requires browser_navigate to be called first. | — |
+| `browser_click` | Click on an element identified by its ref ID from the snapshot (e.g., '@e5'). The ref IDs are shown in square brackets in the snapshot output. Requires browser_navigate and browser_snapshot to be called first. | — |
+| `browser_console` | Get browser console output and JavaScript errors from the current page. Returns console.log/warn/error/info messages and uncaught JS exceptions. Use this to detect silent JavaScript errors, failed API calls, and application warnings. Requi… | — |
+| `browser_get_images` | Get a list of all images on the current page with their URLs and alt text. Useful for finding images to analyze with the vision herramienta. Requires browser_navigate to be called first. | — |
+| `browser_navigate` | Navigate to a URL in the browser. Initializes the session and loads the page. Must be called before other browser herramientas. For simple information retrieval, prefer web_search or web_extract (faster, cheaper). Use browser herramientas when you need… | — |
+| `browser_press` | Press a keyboard key. Useful for submitting forms (Enter), navigating (Tab), or keyboard shortcuts. Requires browser_navigate to be called first. | — |
+| `browser_scroll` | Scroll the page in a direction. Use this to reveal more content that may be below or above the current viewport. Requires browser_navigate to be called first. | — |
+| `browser_snapshot` | Get a text-based snapshot of the current page's accessibility tree. Returns interactive elements with ref IDs (like @e1, @e2) for browser_click and browser_type. full=false (default): compact view with interactive elements. full=true: comp… | — |
+| `browser_type` | Type text into an input field identified by its ref ID. Clears the field first, then types the new text. Requires browser_navigate and browser_snapshot to be called first. | — |
+| `browser_vision` | Take a screenshot of the current page and analyze it with vision AI. Use this when you need to visually understand what's on the page - especially useful for CAPTCHAs, visual verification challenges, complex layouts, or when the text snaps… | — |
+
+## `browser` herramientaset (CDP-gated herramientas)
+
+These two herramientas live in the `browser` herramientaset but only register when a Chrome DevHerramientas Protocol endpoint is reachable at session start — via `/browser connect`, `browser.cdp_url` config, a Browserbase session, or Camofox.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `browser_cdp` | Send a raw Chrome DevHerramientas Protocol command. Escape hatch for browser operations not covered by the higher-level `browser_*` herramientas. See https://chromedevherramientas.github.io/devherramientas-protocol/ | CDP endpoint |
+| `browser_dialog` | Respond to a native JavaScript dialog (alert / confirm / prompt / beforeunload). Call `browser_snapshot` first — pending dialogs appear in its `pending_dialogs` field. Then call `browser_dialog(action='accept'\|'dismiss')`. | CDP endpoint |
+
+## `clarify` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `clarify` | Ask the user a question when you need clarification, feedback, or a decision before proceeding. Supports two modes: 1. **Multiple choice** — provide up to 4 choices. The user picks one or types their own answer via a 5th 'Other' option. 2.… | — |
+
+## `code_execution` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `execute_code` | Run a Python script that can call Hermes herramientas programmatically. Use this when you need 3+ herramienta calls with processing logic between them, need to filter/reduce large herramienta outputs before they enter your contexto, need conditional branching (… | — |
+
+## `cronjob` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `cronjob` | Unified scheduled-task manager. Use `action="create"`, `"list"`, `"update"`, `"pause"`, `"resume"`, `"run"`, or `"remove"` to manage jobs. Supports habilidad-backed jobs with one or more attached habilidads, and `habilidads=[]` on update clears attached habilidads. Cron runs happen in fresh sessions with no current-chat contexto. | — |
+
+## `delegation` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `delegate_task` | Spawn one or more subagentes to work on tasks in isolated contextos. Each subagente gets its own conversation, terminal session, and herramientaset. Only the final summary is returned -- intermediate herramienta results never enter your contexto window. TWO… | — |
+
+## `feishu_doc` herramientaset
+
+Scoped to the Feishu document-comment intelligent-reply handler (`puerta de enlace/platforms/feishu_comment.py`). Not exposed on `hermes-cli` or the regular Feishu chat adapter.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `feishu_doc_read` | Read the full text content of a Feishu/Lark document (Docx, Doc, or Sheet) given its file_type and token. | Feishu app credentials |
+
+## `feishu_drive` herramientaset
+
+Scoped to the Feishu document-comment handler. Drives comment read/write operations on drive files.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `feishu_drive_add_comment` | Add a top-level comment on a Feishu/Lark document or file. | Feishu app credentials |
+| `feishu_drive_list_comments` | List whole-document comments on a Feishu/Lark file, most recent first. | Feishu app credentials |
+| `feishu_drive_list_comment_replies` | List replies on a specific Feishu comment thread (whole-doc or local-selection). | Feishu app credentials |
+| `feishu_drive_reply_comment` | Post a reply on a Feishu comment thread, with optional `@`-mention. | Feishu app credentials |
+
+## `file` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `patch` | Targeted find-and-replace edits in files. Use this instead of sed/awk in terminal. Uses fuzzy matching (9 strategies) so minor whitespace/indentation differences won't break it. Returns a unified diff. Auto-runs syntax checks after editing… | — |
+| `read_file` | Read a text file with line numbers and pagination. Use this instead of cat/head/tail in terminal. Output format: 'LINE_NUM\|CONTENT'. Suggests similar filenames if not found. Use offset and limit for large files. NOTE: Cannot read images o… | — |
+| `search_files` | Search file contents or find files by name. Use this instead of grep/rg/find/ls in terminal. Ripgrep-backed, faster than shell equivalents. Content search (target='content'): Regex search inside files. Output modes: full matches with line… | — |
+| `write_file` | Write content to a file, completely replacing existing content. Use this instead of echo/cat heredoc in terminal. Creates parent directories automatically. OVERWRITES the entire file — use 'patch' for targeted edits. | — |
+
+## `homeassistant` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `ha_call_service` | Call a Home Assistant service to control a device. Use ha_list_services to discover available services and their parameters for each domain. | — |
+| `ha_get_state` | Get the detailed state of a single Home Assistant entity, including all attributes (brightness, color, temperature setpoint, sensor readings, etc.). | — |
+| `ha_list_entities` | List Home Assistant entities. Optionally filter by domain (light, switch, climate, sensor, binary_sensor, cover, fan, etc.) or by area name (living room, kitchen, bedroom, etc.). | — |
+| `ha_list_services` | List available Home Assistant services (actions) for device control. Shows what actions can be performed on each device type and what parameters they accept. Use this to discover how to control devices found via ha_list_entities. | — |
+
+## `computer_use` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `computer_use` | Background macOS desktop control via cua-driver — screenshots (SOM / vision / AX), click / drag / scroll / type / key / wait, list_apps, focus_app. Does NOT steal the user's cursor or keyboard focus. Works with any herramienta-capable modelo. macOS only. | `cua-driver` on `$PATH` (install via `hermes herramientas`). |
+
+
+:::note
+**Honcho herramientas** (`honcho_perfil`, `honcho_search`, `honcho_contexto`, `honcho_reasoning`, `honcho_conclude`) are no longer built-in. They are available via the Honcho memoria proveedor complemento at `complementos/memoria/honcho/`. See [Memoria Proveedors](../guia-usuario/features/memoria-proveedors.md) for installation and usage.
+:::
+
+## `image_gen` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `image_generate` | Generate images from text prompts (text-to-image) or edit/transform an existing image (image-to-image) via the user-configured backend (FAL.ai, OpenAI, xAI, Krea). Pass `image_url` to edit an image and `reference_image_urls` for style references; omit both for text-to-image. The modelo is user-configured and not selectable by the agente. Returns a single image URL or local path. | FAL_KEY / OPENAI_API_KEY / xAI OAuth / KREA_API_KEY |
+
+## `kanban` herramientaset
+
+Registered when the agente is either (a) spawned by the kanban dispatcher (`HERMES_KANBAN_TASK` env set) or (b) running in a perfil that explicitly enables the `kanban` herramientaset. Task-scoped workers use lifecycle herramientas for their assigned task; orchestrator perfils additionally get board-routing herramientas like `kanban_list` and `kanban_unblock`. See [Kanban Multi-Agente](/guia-usuario/features/kanban) for the full workflow.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `kanban_show` | Show the active kanban task assigned to this worker (title, description, comments, dependencies). | `HERMES_KANBAN_TASK` or `kanban` herramientaset |
+| `kanban_list` | List board tasks with filters. Orchestrator-only; hidden from dispatcher-spawned task workers. | perfil with `kanban` herramientaset |
+| `kanban_complete` | Mark the current task done with a structured handoff payload (results, artifacts, follow-ups). | `HERMES_KANBAN_TASK` or `kanban` herramientaset |
+| `kanban_block` | Block the current task on a question for the user — the dispatcher pauses, surfaces the question, and resumes once a human replies. | `HERMES_KANBAN_TASK` or `kanban` herramientaset |
+| `kanban_heartbeat` | Send a progress heartbeat during a long-running operation so the dispatcher knows the worker is still alive. | `HERMES_KANBAN_TASK` or `kanban` herramientaset |
+| `kanban_comment` | Add a comment to the task thread without changing its state — useful for surfacing intermediate findings. | `HERMES_KANBAN_TASK` or `kanban` herramientaset |
+| `kanban_create` | Fan out child tasks from the current task. Used by orchestrators and follow-up-spawning workers. | `HERMES_KANBAN_TASK` or `kanban` herramientaset |
+| `kanban_link` | Link tasks with a parent → child dependency edge. | `HERMES_KANBAN_TASK` or `kanban` herramientaset |
+| `kanban_unblock` | Return a blocked task to `ready`. Orchestrator-only; hidden from dispatcher-spawned task workers. | perfil with `kanban` herramientaset |
+
+## `memoria` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `memoria` | Save important information to persistent memoria that survives across sessions. Your memoria appears in your system prompt at session start -- it's how you remember things about the user and your environment between conversations. WHEN TO SA… | — |
+
+## `messaging` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `send_message` | Send a message to a connected messaging platform, or list available targets. IMPORTANT: When the user asks to send to a specific channel or person (not just a bare platform name), call send_message(action='list') FIRST to see available tar… | — |
+
+## `moa` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `mixture_of_agentes` | Route a hard problem through multiple frontier LLMs collaboratively. Makes 5 API calls (4 reference modelos + 1 aggregator) with maximum reasoning effort — use sparingly for genuinely difficult problems. Best for: complex math, advanced alg… | OPENROUTER_API_KEY |
+
+## `session_search` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `session_search` | Search past sessions stored in the local session DB, or scroll inside one. FTS5-backed retrieval; returns actual messages from the DB (no LLM calls). Three shapes: discovery (pass `query`), scroll (pass `session_id` + `around_message_id`), browse (no args). | — |
+
+## `habilidads` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `habilidad_manage` | Manage habilidads (create, update, delete). Habilidads are your procedural memoria — reusable approaches for recurring task types. New habilidads go to ~/.hermes/habilidads/; existing habilidads can be modified wherever they live. Actions: create (full SKILL.m… | — |
+| `habilidad_view` | Habilidads allow for loading information about specific tasks and workflows, as well as scripts and templates. Load a habilidad's full content or access its linked files (references, templates, scripts). First call returns SKILL.md content plus a… | — |
+| `habilidads_list` | List available habilidads (name + description). Use habilidad_view(name) to load full content. | — |
+
+## `terminal` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `process` | Manage background processes started with terminal(background=true). Actions: 'list' (show all), 'poll' (check status + new output), 'log' (full output with pagination), 'wait' (block until done or timeout), 'kill' (terminate), 'write' (sen… | — |
+| `terminal` | Execute shell commands on a Linux environment. Filesystem persists between calls. Set `background=true` for long-running servers. Set `notify_on_complete=true` (with `background=true`) to get an automatic notification when the process finishes — no polling needed. Do NOT use cat/head/tail — use read_file. Do NOT use grep/rg/find — use search_files. | — |
+
+## `todo` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `todo` | Manage your task list for the current session. Use for complex tasks with 3+ steps or when the user provides multiple tasks. Call with no parameters to read the current list. Writing: - Provide 'todos' array to create/update items - merge=… | — |
+
+## `vision` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `vision_analyze` | Analyze images using AI vision. On vision-capable main modelos, returns the raw image pixels as a multimodal herramienta result so the modelo sees them natively on its next turn. On text-only main modelos, falls back to an auxiliary vision modelo that describes the image and returns the description as text. Herramienta signature is identical either way. | — |
+
+## `video` herramientaset
+
+Opt-in herramientaset (not loaded in the default `hermes-cli` set). Add via `--herramientasets video` or include `video` in your `herramientasets:` config.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `video_analyze` | Analyze video content from a URL or file path — captions, scene breakdowns, key timestamps, and visual descriptions. | — |
+
+## `video_gen` herramientaset
+
+Opt-in herramientaset (not loaded in the default `hermes-cli` set). Add via `--herramientasets video_gen` or enable it in `hermes herramientas` → Video Generation, which also walks you through picking a backend.
+
+Backends ship as complementos under `complementos/video_gen/<name>/`:
+
+- **xAI Grok-Imagine** — text-to-video and image-to-video (SuperGrok OAuth or `XAI_API_KEY`).
+- **FAL.ai** — Veo 3.1, Pixverse v6, Kling O3 (requires `FAL_KEY`).
+
+The single `video_generate` herramienta covers both modalities — pass `image_url` to animate a still, omit it to generate from text alone. The active backend auto-routes to the right endpoint. The herramienta's description is rebuilt at session start to reflect the active backend's actual capabilities (modalities, aspect ratios, resolutions, duration range, max reference images, audio support). See [Video Generation Proveedor Complementos](/guia-desarrollador/video-gen-proveedor-complemento) for backend authoring.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `video_generate` | Generate a video from a text prompt (text-to-video) or animate a still image (image-to-video) using the user's configured video generation backend. Pass `image_url` to animate that image; omit it to generate from text alone. The backend auto-routes to the right endpoint. Returns either an HTTP URL or an absolute file path in the `video` field. | Active `video_gen` complemento + its credential (e.g. `XAI_API_KEY`, `FAL_KEY`) |
+
+## `web` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `web_search` | Search the web for information. Returns up to 5 results by default with titles, URLs, and descriptions. Accepts an optional `limit` (1-100, default 5). The query is passed through to the configured backend, so operators such as `site:domain`, `filetype:pdf`, `intitle:word`, `-term`, and `"exact phrase"` may work when the backend supports them. | EXA_API_KEY or PARALLEL_API_KEY or FIRECRAWL_API_KEY or TAVILY_API_KEY |
+| `web_extract` | Extract content from web page URLs. Returns page content in markdown format. Also works with PDF URLs — pass the PDF link directly and it converts to markdown text. Pages under 5000 chars return full markdown; larger pages are LLM-summarized. | EXA_API_KEY or PARALLEL_API_KEY or FIRECRAWL_API_KEY or TAVILY_API_KEY |
+
+## `x_search` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `x_search` | Search X (Twitter) posts, perfils, and threads using xAI's built-in `x_search` Responses herramienta. Use this for current discussion, reactions, or claims on X rather than general web pages. Off by default — opt in via `hermes herramientas` → 🐦 X (Twitter) Search. Schema is only registered when xAI credentials are configured (check_fn-gated). | XAI_API_KEY **or** xAI Grok OAuth (SuperGrok / Premium+) login |
+
+## `tts` herramientaset
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `text_to_speech` | Convert text to speech audio. Returns a MEDIA: path that the platform delivers as a voice message. On Telegram it plays as a voice bubble, on Discord/WhatsApp as an audio attachment. In CLI mode, saves to ~/voice-memos/. Voice and proveedor… | — |
+
+## `discord` herramientaset
+
+Registered on the `hermes-discord` platform herramientaset (puerta de enlace only). Uses the same bot token as the messaging adapter.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `discord` | Read and participate in a Discord server. Actions include `search_members`, `fetch_messages`, `send_message`, `react`, `fetch_channel`, `list_channels`, and more. | `DISCORD_BOT_TOKEN` |
+
+## `discord_admin` herramientaset
+
+Registered on the `hermes-discord` platform herramientaset. Moderation actions require the bot to hold the matching Discord permissions.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `discord_admin` | Manage a Discord server via the REST API: list guilds/channels/roles, create/edit/delete channels, manage role grants, timeouts, kicks, and bans. | `DISCORD_BOT_TOKEN` + bot permissions |
+
+## `spotify` herramientaset
+
+Registered by the bundled `spotify` complemento. Requires an OAuth token — run `hermes spotify setup` once to authorize.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `spotify_playback` | Control Spotify playback, inspect the active playback state, or fetch recently played tracks. | Spotify OAuth |
+| `spotify_devices` | List Spotify Connect devices or transfer playback to a different device. | Spotify OAuth |
+| `spotify_queue` | Inspect the user's Spotify queue or add an item to it. | Spotify OAuth |
+| `spotify_search` | Search the Spotify catalog for tracks, albums, artists, playlists, shows, or episodes. | Spotify OAuth |
+| `spotify_playlists` | List, inspect, create, update, and modify Spotify playlists. | Spotify OAuth |
+| `spotify_albums` | Fetch Spotify album metadata or album tracks. | Spotify OAuth |
+| `spotify_library` | List, save, or remove the user's saved Spotify tracks or albums. | Spotify OAuth |
+
+## `hermes-yuanbao` herramientaset
+
+Registered only on the `hermes-yuanbao` platform herramientaset. Yuanbao is Tencent's chat app; these herramientas drive its DM/group/sticker APIs.
+
+| Herramienta | Description | Requires environment |
+|------|-------------|----------------------|
+| `yb_query_group_info` | Query basic info about a group (called "派/Pai" in the app): name, owner, member count. | Yuanbao credentials |
+| `yb_query_group_members` | Query members of a group (for `@`-mentions, finding a user by name, listing bots). | Yuanbao credentials |
+| `yb_send_dm` | Send a private/direct message to a user in a group, with optional media files. | Yuanbao credentials |
+| `yb_search_sticker` | Search the built-in Yuanbao sticker (TIM face) catalogue by keyword. | Yuanbao credentials |
+| `yb_send_sticker` | Send a built-in sticker to the current Yuanbao chat. | Yuanbao credentials |
+
+---
