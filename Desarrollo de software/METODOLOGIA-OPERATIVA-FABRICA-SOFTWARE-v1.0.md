@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.0 (aprobada 2026-07-21) |
+| **Versión** | v1.1 (2026-07-22) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -136,11 +136,23 @@ El contexto vive en archivos versionados, no en la cabeza de ningún agente:
 2. **Decisiones y actas** → repo `Gestion-de-proyectos` + Obsidian.
 3. **Memoria operativa de ZEUS** → `~/.claude/.../memory/` (solo punteros cortos).
 
-## 12. Control de versiones de este documento
+## 12. Estándar de control documental
+
+Todo documento de gestión de IDC (repo `Gestion-de-proyectos`) cumple 4 reglas:
+
+1. **Control por carpeta** — cada carpeta tiene un `CONTROL_<CARPETA>.md` que lista y enlaza sus documentos. El `README.md` del proyecto es el maestro que enlaza todos los `CONTROL_*`.
+2. **Bloque de control por documento** — cada documento cierra con: `versión · fecha · hora · autor`.
+3. **Enlaces cruzados** — cada documento enlaza a los que menciona, con **enlaces markdown relativos** (funcionan en GitHub y Obsidian; NO wikilinks).
+4. **Fuente única de la verdad** — cada dato tiene un solo dueño (ej. el presupuesto vive solo en `09-PLAN-COSTOS.md`); los demás documentos **enlazan** al dueño en vez de repetir el valor.
+
+Estructura PM2 de proyecto (formato de referencia): `00-META · 01-INICIO · 02-PLANIFICACION · 03-EJECUCION · 04-CIERRE · 05-ENTREGABLES`.
+
+## 13. Control de versiones de este documento
 
 | Versión | Fecha | Cambios | Autor |
 |---|---|---|---|
 | v1.0 | 2026-07-21 | Versión inicial derivada de ACTA-001 | ZEUS |
+| v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 
 ---
 *Documento vivo. Toda modificación se versiona aquí y se refleja de forma condensada en el `AGENTS.md` de los repos para que ODIN la tenga presente.*
