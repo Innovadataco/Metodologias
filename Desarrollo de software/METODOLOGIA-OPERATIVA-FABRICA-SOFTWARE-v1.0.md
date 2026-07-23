@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.1 (2026-07-22) |
+| **Versión** | v1.2 (2026-07-22) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -102,9 +102,9 @@ Un feature está **Terminado** solo si cumple las 5 reglas de oro, verificadas e
 - [ ] Spec Kit aplicado (spec + plan + tasks documentados). *(Regla 1, 5)*
 - [ ] Código subido a `main` en GitHub. *(Regla 2)*
 - [ ] Pruebas escritas y pasando. *(Regla 3)*
-- [ ] Despliegue validado en ambiente objetivo. *(Regla 4)*
+- [ ] Despliegue validado *(Regla 4)* → **definición:** la app queda **desplegada y accesible por web** para que el CEO pueda verla y probarla (levantar la app + healthcheck OK + URL accesible). No basta con que compile.
 - [ ] Revisión de arquitectura de ZEUS sobre el commit: aprobada.
-- [ ] Validación funcional de Jelkin: aprobada.
+- [ ] Validación funcional de Jelkin **(condicional)**: obligatoria en **funcionalidades completas** de cara al usuario; en **fixes/correcciones internas basta la auditoría de ZEUS**. Jelkin puede pedir la doble revisión cuando quiera.
 - [ ] Sin secrets ni datos sensibles en el código.
 
 > **Sin ACTA-VALIDACION no se despliega ni se da por Terminado.**
@@ -153,6 +153,7 @@ Estructura PM2 de proyecto (formato de referencia): `00-META · 01-INICIO · 02-
 |---|---|---|---|
 | v1.0 | 2026-07-21 | Versión inicial derivada de ACTA-001 | ZEUS |
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
+| v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 
 ---
 *Documento vivo. Toda modificación se versiona aquí y se refleja de forma condensada en el `AGENTS.md` de los repos para que ODIN la tenga presente.*
