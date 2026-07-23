@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.2 (2026-07-22) |
+| **Versión** | v1.4 (2026-07-23) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -122,8 +122,9 @@ Un feature está **Terminado** solo si cumple las 5 reglas de oro, verificadas e
 ## 10. Gobernanza técnica
 
 - **Ramas (decisión CEO):** separadas por tipo de repo.
-  - **Código** (`productos`) → rama única de desarrollo **`feature/001-scaffolding`**. **No se abren ramas por feature.**
-  - **Documentación** (`Gestion-de-proyectos`, `Metodologias`) → **directo sobre `main`**.
+  - **Código** (`productos`) → **dos ramas, y solo dos**: `main` es **producción** y únicamente recibe **merges de liberación** (nunca commits directos); el trabajo diario va a la **rama de pruebas** `feature/001-scaffolding` (nombre heredado del scaffolding inicial, no describe su función). **No se abren ramas por feature.** Estado actual: todo vive en la rama de pruebas; aún no se ha liberado nada a producción.
+  - **Documentación** (`Gestion-de-proyectos`, `Metodologias`) → **una sola rama: `main`**. Son documentos oficiales: no se ramifican ni se mantienen versiones en paralelo. Su control de versiones es el **bloque de control de cada documento** (§12), no la rama.
+- **Liberación a producción:** merge de la rama de desarrollo a `main`, precedido de auditoría de ZEUS sobre el conjunto y registrado en el ACTA-VALIDACION de las features que libera. Un feature está Terminado en desarrollo; está **en producción** solo tras ese merge.
 - **Compuerta de calidad:** el control **no es el PR**, es la **auditoría de ZEUS sobre cada commit** — ZEUS revisa el diff después de que ODIN sube.
 - **Cierre:** un feature solo se da por Terminado con ACTA-VALIDACION completa.
 - **Secrets:** siempre por variables de entorno, nunca en el código.
@@ -157,6 +158,7 @@ Estructura PM2 de proyecto (formato de referencia): `00-META · 01-INICIO · 02-
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 | v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
+| v1.4 | 2026-07-23 | Completa §10 con el modelo de ramas tal como lo fija el CEO: el repo de **código** tiene **dos ramas y solo dos** (pruebas y `main` = producción, que solo recibe merges de liberación); los repos de **documentación** tienen **una sola rama, `main`**, por ser documentos oficiales. Define el paso de liberación: auditoría de ZEUS sobre el conjunto + registro en el ACTA. Sincroniza la versión de la cabecera, que se había quedado en v1.2 | ZEUS |
 
 ---
 *Documento vivo. Toda modificación se versiona aquí y se refleja de forma condensada en el `AGENTS.md` de los repos para que ODIN la tenga presente.*
