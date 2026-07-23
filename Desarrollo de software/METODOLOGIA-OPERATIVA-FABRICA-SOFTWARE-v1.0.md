@@ -121,13 +121,15 @@ Un feature está **Terminado** solo si cumple las 5 reglas de oro, verificadas e
 
 ## 10. Gobernanza técnica
 
-- **Ramas:** trabajo **directo sobre `main`** (decisión CEO). No se usan ramas por feature.
-- **Compuerta de calidad:** al no haber PR, la **auditoría de ZEUS sobre cada commit** es el control — ZEUS revisa el diff después de que ODIN sube.
+- **Ramas (decisión CEO):** separadas por tipo de repo.
+  - **Código** (`productos`) → rama única de desarrollo **`feature/001-scaffolding`**. **No se abren ramas por feature.**
+  - **Documentación** (`Gestion-de-proyectos`, `Metodologias`) → **directo sobre `main`**.
+- **Compuerta de calidad:** el control **no es el PR**, es la **auditoría de ZEUS sobre cada commit** — ZEUS revisa el diff después de que ODIN sube.
 - **Cierre:** un feature solo se da por Terminado con ACTA-VALIDACION completa.
 - **Secrets:** siempre por variables de entorno, nunca en el código.
 - **Código sensible:** preferir revisión con modelos locales.
 
-> ⚠️ **Nota de arquitecto:** trabajar directo sobre `main` gana velocidad pero elimina la red de seguridad del PR. Por eso la **auditoría post-commit de ZEUS es innegociable** — es el único filtro antes de que un error quede en la rama principal.
+> ⚠️ **Nota de arquitecto:** trabajar sobre una rama larga sin PR por feature gana velocidad pero elimina la red de seguridad de la revisión previa al merge. Por eso la **auditoría post-commit de ZEUS es innegociable** — es el único filtro antes de que un error se consolide en la rama de desarrollo.
 
 ## 11. Arquitectura de memoria (3 capas)
 
@@ -154,6 +156,7 @@ Estructura PM2 de proyecto (formato de referencia): `00-META · 01-INICIO · 02-
 | v1.0 | 2026-07-21 | Versión inicial derivada de ACTA-001 | ZEUS |
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
+| v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
 
 ---
 *Documento vivo. Toda modificación se versiona aquí y se refleja de forma condensada en el `AGENTS.md` de los repos para que ODIN la tenga presente.*
