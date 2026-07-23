@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.6 (2026-07-23) |
+| **Versión** | v1.7 (2026-07-23) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -92,7 +92,26 @@ ZEUS revisa <hash>  ·  <qué frente cerró, media línea>
 
 La "Nota" se reserva para lo que no se ve leyendo el código: una desviación de lo pedido, un hallazgo preexistente, un riesgo asumido, algo que ZEUS debe saber antes de auditar. **Nada de tablas de resultados, listas de commits ni descripciones de lo hecho**: eso está en el repo y en `tasks.md`.
 
-**Regla 4 — La revisión NO se pega.** Jelkin dice *"ZEUS, revisa el commit `<hash>` del proyecto `<id>`"*. ZEUS lee el diff directo del repo. La referencia sigue §13: producto por **nombre**, nunca por número.
+**Regla 4 — Ventana nueva por frente.** Cuando la ventana de ODIN se satura (o se cierra un frente), **no se recupera el hilo: se abre una ventana limpia**. El contexto no vive en el chat sino en los archivos (§11), así que basta con un **prompt de reapertura** que le diga qué leer y en qué orden:
+
+```
+CONTEXTO: <PRODUCTO> (repo <ruta>) · SPEC-<NNN>
+Ventana nueva. No tienes historial: todo tu contexto está en archivos.
+
+LEE ANTES DE ACTUAR, EN ESTE ORDEN:
+1. AGENTS.md del repo — roles, puertos intocables, ramas, aislamiento.
+2. .specify/memory/constitution.md — principios rectores del producto.
+3. Metodología Operativa §6, §8, §10, §13.
+4. PM2 del proyecto: 01-REGISTROS-AVANCE (estado real),
+   05-DECISIONES (vinculantes), 04-INCIDENCIAS, 06-ACTAS-VALIDACION.
+
+ESTADO: <qué está Terminado, qué está congelado, rama de trabajo>
+TAREA: <...>
+```
+
+Quien arranca sin leer eso repite trabajo, contradice decisiones ya tomadas o toca el producto equivocado. **Releer es más barato que rehacer.**
+
+**Regla 5 — La revisión NO se pega.** Jelkin dice *"ZEUS, revisa el commit `<hash>` del proyecto `<id>`"*. ZEUS lee el diff directo del repo. La referencia sigue §13: producto por **nombre**, nunca por número.
 
 ## 7. DO / DON'T por actor
 
@@ -207,6 +226,7 @@ Nombre **y** ruta del repo. Con eso ningún agente puede equivocarse de producto
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 | v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
+| v1.7 | 2026-07-23 | §6 regla 4: **ventana nueva por frente** con plantilla de prompt de reapertura. La saturación de contexto de ODIN es esperada, no una avería: el contexto vive en archivos (§11) y se recupera leyéndolos en orden, no arrastrando el hilo | ZEUS |
 | v1.6 | 2026-07-23 | §6: **ODIN commitea y hace push** en el mismo acto (ZEUS nunca sube código de producto) y su **reporte es de una línea** — `ZEUS revisa <hash>` más una nota solo si hay algo que el diff no muestra. Motivo: los reportes largos saturan el contexto del CEO y la verdad ya vive en el repo (§9) | ZEUS |
 | v1.5 | 2026-07-23 | Añade §13 **Nomenclatura**: los números de carpeta están invertidos entre el repo de gestión y el de código, así que el mismo número designa productos distintos. Se fija que manda el **nombre** (`PRODUCTO · TIPO-NNN`) y que todo prompt a ODIN abre con producto y ruta del repo | ZEUS |
 | v1.4 | 2026-07-23 | Completa §10 con el modelo de ramas tal como lo fija el CEO: el repo de **código** tiene **dos ramas y solo dos** (pruebas y `main` = producción, que solo recibe merges de liberación); los repos de **documentación** tienen **una sola rama, `main`**, por ser documentos oficiales. Define el paso de liberación: auditoría de ZEUS sobre el conjunto + registro en el ACTA. Sincroniza la versión de la cabecera, que se había quedado en v1.2 | ZEUS |
