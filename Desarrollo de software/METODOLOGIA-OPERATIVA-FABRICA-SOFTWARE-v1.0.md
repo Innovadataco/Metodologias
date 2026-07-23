@@ -100,7 +100,7 @@ Un feature está **Terminado** solo si cumple las 5 reglas de oro, verificadas e
 
 **Checklist ACTA-VALIDACION (obligatorio antes de dar por Terminado):**
 - [ ] Spec Kit aplicado (spec + plan + tasks documentados). *(Regla 1, 5)*
-- [ ] Código subido a `main` en GitHub. *(Regla 2)*
+- [ ] Código subido a GitHub, en la rama que corresponda al repo (§10). *(Regla 2)*
 - [ ] Pruebas escritas y pasando. *(Regla 3)*
 - [ ] Despliegue validado *(Regla 4)* → **definición:** la app queda **desplegada y accesible por web** para que el CEO pueda verla y probarla (levantar la app + healthcheck OK + URL accesible). No basta con que compile.
 - [ ] Revisión de arquitectura de ZEUS sobre el commit: aprobada.
