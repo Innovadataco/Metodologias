@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.5 (2026-07-23) |
+| **Versión** | v1.6 (2026-07-23) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -81,7 +81,18 @@ DEFINICIÓN DE TERMINADO: aplica las 5 reglas de oro. Pruebas incluidas.
 ENTREGA: commit con mensaje convencional + resumen de qué tocaste.
 ```
 
-**Regla 2 — La revisión NO se pega.** Jelkin dice *"ZEUS, revisa el commit `<hash>` del proyecto `<id>`"*. ZEUS lee el diff directo del repo. La referencia sigue §13: producto por **nombre**, nunca por número.
+**Regla 2 — ODIN sube su propio trabajo.** ODIN **commitea Y hace push** en el mismo acto: un commit sin push no cumple la Regla de Oro 2 y deja el trabajo solo en la MacStudio, sin respaldo. **ZEUS nunca hace push de código de producto** — no es suyo (§2). Si ZEUS encuentra commits sin subir, los devuelve a ODIN; no los sube.
+
+**Regla 3 — El reporte de ODIN es de una línea.** El chat del CEO es un recurso escaso: pegar reportes largos lo satura y ZEUS lee el repo de todos modos (§9). ODIN responde así:
+
+```
+ZEUS revisa <hash>  ·  <qué frente cerró, media línea>
+[Nota: solo si hay algo que el diff NO muestra]
+```
+
+La "Nota" se reserva para lo que no se ve leyendo el código: una desviación de lo pedido, un hallazgo preexistente, un riesgo asumido, algo que ZEUS debe saber antes de auditar. **Nada de tablas de resultados, listas de commits ni descripciones de lo hecho**: eso está en el repo y en `tasks.md`.
+
+**Regla 4 — La revisión NO se pega.** Jelkin dice *"ZEUS, revisa el commit `<hash>` del proyecto `<id>`"*. ZEUS lee el diff directo del repo. La referencia sigue §13: producto por **nombre**, nunca por número.
 
 ## 7. DO / DON'T por actor
 
@@ -196,6 +207,7 @@ Nombre **y** ruta del repo. Con eso ningún agente puede equivocarse de producto
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 | v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
+| v1.6 | 2026-07-23 | §6: **ODIN commitea y hace push** en el mismo acto (ZEUS nunca sube código de producto) y su **reporte es de una línea** — `ZEUS revisa <hash>` más una nota solo si hay algo que el diff no muestra. Motivo: los reportes largos saturan el contexto del CEO y la verdad ya vive en el repo (§9) | ZEUS |
 | v1.5 | 2026-07-23 | Añade §13 **Nomenclatura**: los números de carpeta están invertidos entre el repo de gestión y el de código, así que el mismo número designa productos distintos. Se fija que manda el **nombre** (`PRODUCTO · TIPO-NNN`) y que todo prompt a ODIN abre con producto y ruta del repo | ZEUS |
 | v1.4 | 2026-07-23 | Completa §10 con el modelo de ramas tal como lo fija el CEO: el repo de **código** tiene **dos ramas y solo dos** (pruebas y `main` = producción, que solo recibe merges de liberación); los repos de **documentación** tienen **una sola rama, `main`**, por ser documentos oficiales. Define el paso de liberación: auditoría de ZEUS sobre el conjunto + registro en el ACTA. Sincroniza la versión de la cabecera, que se había quedado en v1.2 | ZEUS |
 
