@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.4 (2026-07-23) |
+| **Versión** | v1.5 (2026-07-23) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -72,7 +72,7 @@ Spec Kit vanilla asume un solo agente para todo el ciclo. IDC lo divide en dos c
 
 **Plantilla de prompt de ZEUS para ODIN:**
 ```
-CONTEXTO: Proyecto <id>, feature <nombre>.
+CONTEXTO: <PRODUCTO> (repo <ruta>) · SPEC-<NNN> <nombre-corto>.    ← §13
 BASE: Sigue la Constitución (.specify/memory/constitution.md) y AGENTS.md del repo.
 TAREA: <qué hacer, 1-3 líneas>
 REFERENCIA: <ruta del spec/plan a leer, sección>
@@ -81,7 +81,7 @@ DEFINICIÓN DE TERMINADO: aplica las 5 reglas de oro. Pruebas incluidas.
 ENTREGA: commit con mensaje convencional + resumen de qué tocaste.
 ```
 
-**Regla 2 — La revisión NO se pega.** Jelkin dice *"ZEUS, revisa el commit `<hash>` del proyecto `<id>`"*. ZEUS lee el diff directo del repo.
+**Regla 2 — La revisión NO se pega.** Jelkin dice *"ZEUS, revisa el commit `<hash>` del proyecto `<id>`"*. ZEUS lee el diff directo del repo. La referencia sigue §13: producto por **nombre**, nunca por número.
 
 ## 7. DO / DON'T por actor
 
@@ -150,7 +150,45 @@ Todo documento de gestión de IDC (repo `Gestion-de-proyectos`) cumple 4 reglas:
 
 Estructura PM2 de proyecto (formato de referencia): `00-META · 01-INICIO · 02-PLANIFICACION · 03-EJECUCION · 04-CIERRE · 05-ENTREGABLES`.
 
-## 13. Control de versiones de este documento
+## 13. Nomenclatura: cómo se nombra el trabajo
+
+**Problema que resuelve esta sección:** los números de carpeta **no coinciden** entre el repo de gestión y el de código. El mismo número significa dos productos distintos:
+
+| Producto | `Gestion-de-proyectos/01-PROYECTOS/` | `productos/` |
+|---|---|---|
+| **Protección Infantil** | `001-2026-PROTECCION_INFANTIL` | `002-2026-PROTECCION-INFANTIL` |
+| **SICOV-OTPC** | `002-2026-SICOV-OTPC` | `003-2026-SICOV-OTPC` |
+| **INNOVADATACO** | `003-2026-INNOVADATACO` | `001-2026-INNOVADATACO` |
+
+Decir *"el proyecto 003"* es ambiguo: es INNOVADATACO en gestión y SICOV en código. Dado que la regla de aislamiento entre productos es innegociable (ADR_002), esa ambigüedad es un riesgo operativo real, no una molestia de forma.
+
+### Regla: manda el NOMBRE, nunca el número
+
+> **Toda referencia a un trabajo se nombra `PRODUCTO · TIPO-NNN`.**
+
+| Se dice | No se dice |
+|---|---|
+| `INNOVADATACO · SPEC-004` | "la spec 4", "el proyecto 003" |
+| `INNOVADATACO · I-009` | "la incidencia 9" |
+| `INNOVADATACO · D-036` | "la decisión 36" |
+| `SICOV · SPEC-005` | "la 005" |
+| `ADR_004` | (los ADR son transversales: no llevan producto) |
+
+Productos válidos como nombre: **INNOVADATACO**, **PROTECCIÓN INFANTIL**, **SICOV**.
+
+**Por qué no se renumeran las carpetas:** cada número aparece en rutas relativas de specs, ADR, actas, planes y archivos `CONTROL_*` de ambos repos. Renumerar rompería cientos de enlaces para ganar una coherencia que la regla del nombre ya resuelve a coste cero. Si algún día se hace, es una tarea propia con su spec.
+
+### Prompt a ODIN: primera línea obligatoria
+
+Todo prompt de ZEUS a ODIN abre identificando producto y trabajo sin ambigüedad:
+
+```
+CONTEXTO: INNOVADATACO (repo productos/001-2026-INNOVADATACO) · SPEC-004
+```
+
+Nombre **y** ruta del repo. Con eso ningún agente puede equivocarse de producto.
+
+## 14. Control de versiones de este documento
 
 | Versión | Fecha | Cambios | Autor |
 |---|---|---|---|
@@ -158,6 +196,7 @@ Estructura PM2 de proyecto (formato de referencia): `00-META · 01-INICIO · 02-
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 | v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
+| v1.5 | 2026-07-23 | Añade §13 **Nomenclatura**: los números de carpeta están invertidos entre el repo de gestión y el de código, así que el mismo número designa productos distintos. Se fija que manda el **nombre** (`PRODUCTO · TIPO-NNN`) y que todo prompt a ODIN abre con producto y ruta del repo | ZEUS |
 | v1.4 | 2026-07-23 | Completa §10 con el modelo de ramas tal como lo fija el CEO: el repo de **código** tiene **dos ramas y solo dos** (pruebas y `main` = producción, que solo recibe merges de liberación); los repos de **documentación** tienen **una sola rama, `main`**, por ser documentos oficiales. Define el paso de liberación: auditoría de ZEUS sobre el conjunto + registro en el ACTA. Sincroniza la versión de la cabecera, que se había quedado en v1.2 | ZEUS |
 
 ---
