@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.7 (2026-07-23) |
+| **Versión** | v1.8 (2026-07-24) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -152,9 +152,10 @@ Un feature está **Terminado** solo si cumple las 5 reglas de oro, verificadas e
 ## 10. Gobernanza técnica
 
 - **Ramas (decisión CEO):** separadas por tipo de repo.
-  - **Código** (`productos`) → **dos ramas, y solo dos**: `main` es **producción** y únicamente recibe **merges de liberación** (nunca commits directos); el trabajo diario va a la **rama de pruebas** `feature/001-scaffolding` (nombre heredado del scaffolding inicial, no describe su función). **No se abren ramas por feature.** Estado actual: todo vive en la rama de pruebas; aún no se ha liberado nada a producción.
+  - **Código** (`productos`) → **dos ramas, y solo dos**: la **rama de pruebas** `feature/001-scaffolding` (nombre heredado del scaffolding) es donde ocurre el trabajo diario de los tres frentes; **`main` es el tronco, que se mantiene al día** con el trabajo ya probado. **No se abren ramas por feature.**
+    > **Aclaración del CEO (2026-07-24, v1.8):** actualizar `main` es **sincronizar el tronco**, no una ceremonia de liberación. IDC **aún no tiene ambiente productivo** — ADR_001 §5 sigue sin definirlo—, así que nada se despliega desde `main`. Cuando ese ambiente exista, se le añadirá a `main` la semántica de despliegue y esta seccion se enmienda.
   - **Documentación** (`Gestion-de-proyectos`, `Metodologias`) → **una sola rama: `main`**. Son documentos oficiales: no se ramifican ni se mantienen versiones en paralelo. Su control de versiones es el **bloque de control de cada documento** (§12), no la rama.
-- **Liberación a producción:** merge de la rama de desarrollo a `main`, precedido de auditoría de ZEUS sobre el conjunto y registrado en el ACTA-VALIDACION de las features que libera. Un feature está Terminado en desarrollo; está **en producción** solo tras ese merge.
+- **Actualización de `main`:** merge de la rama de pruebas al tronco, **solo con la rama verde** (suite, `tsc --noEmit` y build limpios). Es sincronización rutinaria: **no** exige acta propia ni ceremonia. Nunca se reescribe la historia de una rama compartida.
 - **Compuerta de calidad:** el control **no es el PR**, es la **auditoría de ZEUS sobre cada commit** — ZEUS revisa el diff después de que ODIN sube.
 - **Cierre:** un feature solo se da por Terminado con ACTA-VALIDACION completa.
 - **Secrets:** siempre por variables de entorno, nunca en el código.
@@ -226,6 +227,7 @@ Nombre **y** ruta del repo. Con eso ningún agente puede equivocarse de producto
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 | v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
+| v1.8 | 2026-07-24 | §10: **`main` es el tronco que se mantiene al día**, no "producción" (aclaración del CEO). Actualizarlo es sincronización rutinaria con la rama verde, sin ceremonia ni acta propia. Se registra que IDC **aún no tiene ambiente productivo** (ADR_001 §5 pendiente), por lo que la semántica de despliegue se añadirá cuando exista | ZEUS |
 | v1.7 | 2026-07-23 | §6 regla 4: **ventana nueva por frente** con plantilla de prompt de reapertura. La saturación de contexto de ODIN es esperada, no una avería: el contexto vive en archivos (§11) y se recupera leyéndolos en orden, no arrastrando el hilo | ZEUS |
 | v1.6 | 2026-07-23 | §6: **ODIN commitea y hace push** en el mismo acto (ZEUS nunca sube código de producto) y su **reporte es de una línea** — `ZEUS revisa <hash>` más una nota solo si hay algo que el diff no muestra. Motivo: los reportes largos saturan el contexto del CEO y la verdad ya vive en el repo (§9) | ZEUS |
 | v1.5 | 2026-07-23 | Añade §13 **Nomenclatura**: los números de carpeta están invertidos entre el repo de gestión y el de código, así que el mismo número designa productos distintos. Se fija que manda el **nombre** (`PRODUCTO · TIPO-NNN`) y que todo prompt a ODIN abre con producto y ruta del repo | ZEUS |
