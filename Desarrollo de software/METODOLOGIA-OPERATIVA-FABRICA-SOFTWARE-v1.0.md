@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.8 (2026-07-24) |
+| **Versión** | v1.9 (2026-07-27) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -23,7 +23,17 @@ Definir **cómo se construye software en IDC** con agentes de IA: quién hace qu
 |---|---|---|---|
 | **Jelkin** (CEO/PMO) | Dirección y negocio | Genera la idea, prioriza, aprueba, valida en pruebas | Escribir specs ni código |
 | **ZEUS** (Claude Code/Opus) | Arquitecto y Líder de Fábrica | Constitución, brief de diseño, revisa specs/planes, audita código | **No escribe código de producto** |
-| **ODIN** (VS Code + claude-code) | Desarrollador | Redacta spec/plan, implementa, prueba, despliega, commitea | **No decide arquitectura** |
+| **ODIN** (agente implementador) | Desarrollador | Redacta spec/plan, implementa, prueba, despliega, commitea | **No decide arquitectura** |
+
+> **Sobre la encarnación de los agentes (v1.9, 2026-07-27).** El rol es fijo; la herramienta que lo
+> encarna no. En **PROTECCIÓN INFANTIL**, ODIN es **Kimi, ejecutado con Kimi Code** (antes era
+> claude-code en VS Code) y ZEUS sigue siendo **Claude Code**. Consecuencias, aplicables a
+> cualquier proyecto donde ODIN y ZEUS no compartan modelo:
+> 1. El handoff **no puede asumir comportamientos** del modelo del arquitecto: prompt autosuficiente y por referencia (§6 R1/R4).
+> 2. La **compuerta §4 deja de ser opcional** — ODIN se detiene tras `spec`+`plan`.
+> 3. La **auditoría post-commit de ZEUS gana peso**: es el único filtro sobre código escrito por otro criterio (§10).
+>
+> Cada proyecto registra su encarnación vigente en sus **Decisiones** (en PI: `D-31`).
 
 ## 3. Las 5 Reglas de Oro (siempre, sin excepción)
 
@@ -158,6 +168,7 @@ Un feature está **Terminado** solo si cumple las 5 reglas de oro, verificadas e
 - **Actualización de `main`:** merge de la rama de pruebas al tronco, **solo con la rama verde** (suite, `tsc --noEmit` y build limpios). Es sincronización rutinaria: **no** exige acta propia ni ceremonia. Nunca se reescribe la historia de una rama compartida.
 - **Compuerta de calidad:** el control **no es el PR**, es la **auditoría de ZEUS sobre cada commit** — ZEUS revisa el diff después de que ODIN sube.
 - **Cierre:** un feature solo se da por Terminado con ACTA-VALIDACION completa.
+- **Los comandos de la integración Spec Kit SE VERSIONAN** (v1.9). Cada integración instala sus comandos en su propio directorio (`.claude/`, `.clinerules/`, `.kimi-code/skills/`…). **Ese directorio no puede quedar en `.gitignore`.** Caso real que origina la regla: en PROTECCIÓN INFANTIL la integración era `cline`, con sus comandos en `.clinerules/` — ignorado desde el primer día. Los comandos **nunca existieron en el repo**, ningún agente los tuvo, y cuatro specs (098/100/101/102) se escribieron a mano y llegaron **sin `plan.md` ni `tasks.md`**. No fue indisciplina: faltaba la herramienta. Al cambiar de agente se usa `specify integration switch <clave>` (no re-inicializar: preserva la constitución) y **se commitea el directorio de comandos en el acto**.
 - **Secrets:** siempre por variables de entorno, nunca en el código.
 - **Código sensible:** preferir revisión con modelos locales.
 
@@ -227,6 +238,7 @@ Nombre **y** ruta del repo. Con eso ningún agente puede equivocarse de producto
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 | v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
+| v1.9 | 2026-07-27 | §2: el **rol es fijo, la encarnación no** — ODIN pasa a ser **Kimi (Kimi Code)** en PROTECCIÓN INFANTIL y se fijan las 3 consecuencias de que ODIN y ZEUS no compartan modelo (handoff por referencia, compuerta §4 obligatoria, auditoría de ZEUS como único filtro). §10: **los comandos de la integración Spec Kit se versionan** — el directorio de comandos no puede estar en `.gitignore`. Origen: `.clinerules/` ignorado hizo que 4 specs se escribieran a mano, sin `plan.md` ni `tasks.md` | ZEUS |
 | v1.8 | 2026-07-24 | §10: **`main` es el tronco que se mantiene al día**, no "producción" (aclaración del CEO). Actualizarlo es sincronización rutinaria con la rama verde, sin ceremonia ni acta propia. Se registra que IDC **aún no tiene ambiente productivo** (ADR_001 §5 pendiente), por lo que la semántica de despliegue se añadirá cuando exista | ZEUS |
 | v1.7 | 2026-07-23 | §6 regla 4: **ventana nueva por frente** con plantilla de prompt de reapertura. La saturación de contexto de ODIN es esperada, no una avería: el contexto vive en archivos (§11) y se recupera leyéndolos en orden, no arrastrando el hilo | ZEUS |
 | v1.6 | 2026-07-23 | §6: **ODIN commitea y hace push** en el mismo acto (ZEUS nunca sube código de producto) y su **reporte es de una línea** — `ZEUS revisa <hash>` más una nota solo si hay algo que el diff no muestra. Motivo: los reportes largos saturan el contexto del CEO y la verdad ya vive en el repo (§9) | ZEUS |
