@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v1.9 (2026-07-27) |
+| **Versión** | v2.0 (2026-07-29) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -78,29 +78,45 @@ Spec Kit vanilla asume un solo agente para todo el ciclo. IDC lo divide en dos c
 
 ## 6. Protocolo de handoff (ZEUS → ODIN)
 
-**Regla 1 — Prompt por referencia, no por copia.** El prompt apunta a los archivos del repo; no se pega el contenido.
+**Regla 1 — Cáscara delgada sobre Spec Kit, no por copia.** El instructivo **no repite lo que Spec Kit ya da** (tarea medible → **FR**; criterio de éxito → **SC**; aceptación → **Acceptance Scenarios**; definición de terminado → **T0xx + Checkpoints** de `tasks.md`; dudas → **`[NEEDS CLARIFICATION]` + `/speckit.clarify`**; revisión cruzada → **`/speckit.analyze`**). Solo lleva lo que Spec Kit **no cruza** a una ventana limpia ni conoce del proyecto; el resto es un *puntero*. La **compuerta §4 es el punto donde para la cadena de comandos**.
 
-**Plantilla de prompt de ZEUS para ODIN:**
+**Plantilla de prompt de ZEUS para ODIN (cáscara):**
 ```
-CONTEXTO: <PRODUCTO> (repo <ruta>) · SPEC-<NNN> <nombre-corto>.    ← §13
-BASE: Sigue la Constitución (.specify/memory/constitution.md) y AGENTS.md del repo.
-TAREA: <qué hacer, 1-3 líneas>
-REFERENCIA: <ruta del spec/plan a leer, sección>
-RESTRICCIONES: <decisiones de arquitectura innegociables>
-DEFINICIÓN DE TERMINADO: aplica las 5 reglas de oro. Pruebas incluidas.
-ENTREGA: commit con mensaje convencional + resumen de qué tocaste.
+# <PRODUCTO>-<NNN> · <nombre-corto> — SPEC-<NNN>          ← §13 (manda el nombre)
+> radicado: <PRODUCTO> · <n> · SPEC-<NNN> · rama <rama>   ← §13 primera línea obligatoria
+
+## Contexto puente (máx 5 líneas)   ← lo único que Spec Kit NO cruza a ventana limpia
+Qué se hace, por qué importa, y la decisión vinculante que lo rige. Autosuficiente.
+
+## Cadena de comandos  = la tarea Y la compuerta
+- [ ] §4 DISEÑO :  /speckit.specify → /speckit.plan   ⟶ PARA · ZEUS aprueba antes de seguir
+- [ ] DIRECTO   :  /speckit.tasks → /speckit.analyze → /speckit.implement
+(dudas ⇒ [NEEDS CLARIFICATION] + /speckit.clarify · ODIN no inventa)
+
+## Leer primero
+AGENTS.md · .specify/memory/constitution.md · specs/<NNN>/{spec,plan,tasks}.md · [D-xx/I-xx del PM2 + commit]
+
+## Candados (lo que Spec Kit no sabe)
+- [archivos que se LEEN, no se tocan] · [qué NO reconciliar / NO silenciar]
+
+## Señales (ver Regla 3)
 ```
+La auditoría de ZEUS corre contra **FR/SC + Acceptance** (`spec.md`) y **T0xx** (`tasks.md`): esos criterios **no se copian** al prompt.
 
 **Regla 2 — ODIN sube su propio trabajo.** ODIN **commitea Y hace push** en el mismo acto: un commit sin push no cumple la Regla de Oro 2 y deja el trabajo solo en la MacStudio, sin respaldo. **ZEUS nunca hace push de código de producto** — no es suyo (§2). Si ZEUS encuentra commits sin subir, los devuelve a ODIN; no los sube.
 
-**Regla 3 — El reporte de ODIN es de una línea.** El chat del CEO es un recurso escaso: pegar reportes largos lo satura y ZEUS lee el repo de todos modos (§9). ODIN responde así:
+**Regla 3 — Protocolo de señales: una línea, un verbo de acción.** El chat del CEO es un recurso escaso y ZEUS lee el repo de todos modos (§9). El ciclo se mueve con señales cortas que muestran **acción, no silencio**. Cada actor emite la suya:
 
 ```
-ZEUS revisa <hash>  ·  <qué frente cerró, media línea>
-[Nota: solo si hay algo que el diff NO muestra]
+ZEUS → repo + CEO :  <RAD>  RADICADA · pégala a ODIN
+CEO  → ODIN       :  [pega la cáscara]
+ODIN → CEO/ZEUS   :  <RAD>  REVISADA · arranco        ← acuse OBLIGATORIO: la entendí, voy
+ODIN → CEO/ZEUS   :  <RAD>  REALIZADO · <hash> · <media línea>   [Nota: …]
+CEO  → ZEUS       :  audita
+ZEUS → CEO        :  <RAD>  REVISO <hash> → CUMPLE ✓ | NO CUMPLE ✗ · para Jelkin: <…>
 ```
 
-La "Nota" se reserva para lo que no se ve leyendo el código: una desviación de lo pedido, un hallazgo preexistente, un riesgo asumido, algo que ZEUS debe saber antes de auditar. **Nada de tablas de resultados, listas de commits ni descripciones de lo hecho**: eso está en el repo y en `tasks.md`.
+**Estados:** `RADICADA → REVISADA → REALIZADO → REVISO → CUMPLE/NO CUMPLE`. El `REVISADA · arranco` es **obligatorio** (regla en `AGENTS.md`): el CEO nunca se queda sin saber si ODIN arrancó; si algo bloquea, `REVISADA · dudas: <…> → PARA`. La **"Nota"** de `REALIZADO` se reserva para lo que el diff NO muestra: una desviación, un hallazgo preexistente, un riesgo asumido. **Nada de tablas, listas de commits ni descripciones de lo hecho** — eso vive en el repo y en `tasks.md`.
 
 **Regla 4 — Ventana nueva por frente.** Cuando la ventana de ODIN se satura (o se cierra un frente), **no se recupera el hilo: se abre una ventana limpia**. El contexto no vive en el chat sino en los archivos (§11), así que basta con un **prompt de reapertura** que le diga qué leer y en qué orden:
 
@@ -238,6 +254,7 @@ Nombre **y** ruta del repo. Con eso ningún agente puede equivocarse de producto
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 | v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
+| v2.0 | 2026-07-29 | §6: **el instructivo es una cáscara delgada sobre Spec Kit** (no repite FR/SC/Acceptance/tasks; la compuerta §4 es el punto donde para la cadena de comandos) y §6 R3 pasa a **protocolo de señales** (`RADICADA→REVISADA→REALIZADO→REVISO→CUMPLE`, con acuse `REVISADA·arranco` obligatorio de ODIN). Motivo (mesa [ACTA_ARQ_06]): el CEO cargaba tokens, contexto perdido y copy-paste sin leer, y quedaba de *stopper* entre las dos IAs. Se radica a ODIN la obligación en `AGENTS.md` ([D-44]) | ZEUS |
 | v1.9 | 2026-07-27 | §2: el **rol es fijo, la encarnación no** — ODIN pasa a ser **Kimi (Kimi Code)** en PROTECCIÓN INFANTIL y se fijan las 3 consecuencias de que ODIN y ZEUS no compartan modelo (handoff por referencia, compuerta §4 obligatoria, auditoría de ZEUS como único filtro). §10: **los comandos de la integración Spec Kit se versionan** — el directorio de comandos no puede estar en `.gitignore`. Origen: `.clinerules/` ignorado hizo que 4 specs se escribieran a mano, sin `plan.md` ni `tasks.md` | ZEUS |
 | v1.8 | 2026-07-24 | §10: **`main` es el tronco que se mantiene al día**, no "producción" (aclaración del CEO). Actualizarlo es sincronización rutinaria con la rama verde, sin ceremonia ni acta propia. Se registra que IDC **aún no tiene ambiente productivo** (ADR_001 §5 pendiente), por lo que la semántica de despliegue se añadirá cuando exista | ZEUS |
 | v1.7 | 2026-07-23 | §6 regla 4: **ventana nueva por frente** con plantilla de prompt de reapertura. La saturación de contexto de ODIN es esperada, no una avería: el contexto vive en archivos (§11) y se recupera leyéndolos en orden, no arrastrando el hilo | ZEUS |
