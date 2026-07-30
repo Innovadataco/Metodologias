@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v2.0 (2026-07-29) |
+| **Versión** | v2.1 (2026-07-29) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -117,6 +117,17 @@ ZEUS → CEO        :  <RAD>  REVISO <hash> → CUMPLE ✓ | NO CUMPLE ✗ · pa
 ```
 
 **Estados:** `RADICADA → REVISADA → REALIZADO → REVISO → CUMPLE/NO CUMPLE`. El `REVISADA · arranco` es **obligatorio** (regla en `AGENTS.md`): el CEO nunca se queda sin saber si ODIN arrancó; si algo bloquea, `REVISADA · dudas: <…> → PARA`. La **"Nota"** de `REALIZADO` se reserva para lo que el diff NO muestra: una desviación, un hallazgo preexistente, un riesgo asumido. **Nada de tablas, listas de commits ni descripciones de lo hecho** — eso vive en el repo y en `tasks.md`.
+
+**Cuándo va Nota — test binario.** Antes de escribir una Nota, pregúntate: *¿cambiaría el veredicto de ZEUS si no la lee?* **No → no hay Nota.**
+
+| ✅ SÍ Nota (cambia el veredicto / pide validación) | ❌ NO Nota (el diff ya lo dice) |
+|---|---|
+| Me desvié de lo pedido | "No toqué X" / "respeté el candado" |
+| Hallazgo que afecta lo auditado | Estado del working tree ajeno |
+| Riesgo asumido **en este cambio** | "Cumplí los checkpoints" |
+| Supuesto que tomé para desempatar | Descripción de lo que hice |
+
+**Aplica igual a ZEUS y al CEO.** Toda respuesta —incluido el veredicto de ZEUS— es una línea salvo que **(a)** sea necesaria para el veredicto o **(b)** requiera validación del CEO. Si CUMPLE y no hay nada que validar, ZEUS responde solo `<RAD> · CUMPLE ✓` y para. Sin prosa de relleno.
 
 **Regla 4 — Ventana nueva por frente.** Cuando la ventana de ODIN se satura (o se cierra un frente), **no se recupera el hilo: se abre una ventana limpia**. El contexto no vive en el chat sino en los archivos (§11), así que basta con un **prompt de reapertura** que le diga qué leer y en qué orden:
 
@@ -254,6 +265,7 @@ Nombre **y** ruta del repo. Con eso ningún agente puede equivocarse de producto
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
 | v1.3 | 2026-07-22 | Corrige §10: el "directo a `main`" aplica a los repos de **documentación**; el repo de **código** trabaja sobre la rama única `feature/001-scaffolding`. Alinea la nota de arquitecto | ZEUS |
+| v2.1 | 2026-07-29 | §6 R3: **la Nota se rige por un test binario** —¿cambia el veredicto de ZEUS?— con lista blanca/negra; y la regla *"una línea salvo que sea necesario o requiera validación del CEO"* **aplica igual a ZEUS y al CEO**, no solo a ODIN. Motivo: la Nota de 002-PI-044 reportó working tree ajeno (ruido); el CEO pidió que las notas/prosa vayan solo cuando importan. Se radica a ODIN en `AGENTS.md` (002-PI-045) | ZEUS |
 | v2.0 | 2026-07-29 | §6: **el instructivo es una cáscara delgada sobre Spec Kit** (no repite FR/SC/Acceptance/tasks; la compuerta §4 es el punto donde para la cadena de comandos) y §6 R3 pasa a **protocolo de señales** (`RADICADA→REVISADA→REALIZADO→REVISO→CUMPLE`, con acuse `REVISADA·arranco` obligatorio de ODIN). Motivo (mesa [ACTA_ARQ_06]): el CEO cargaba tokens, contexto perdido y copy-paste sin leer, y quedaba de *stopper* entre las dos IAs. Se radica a ODIN la obligación en `AGENTS.md` ([D-44]) | ZEUS |
 | v1.9 | 2026-07-27 | §2: el **rol es fijo, la encarnación no** — ODIN pasa a ser **Kimi (Kimi Code)** en PROTECCIÓN INFANTIL y se fijan las 3 consecuencias de que ODIN y ZEUS no compartan modelo (handoff por referencia, compuerta §4 obligatoria, auditoría de ZEUS como único filtro). §10: **los comandos de la integración Spec Kit se versionan** — el directorio de comandos no puede estar en `.gitignore`. Origen: `.clinerules/` ignorado hizo que 4 specs se escribieran a mano, sin `plan.md` ni `tasks.md` | ZEUS |
 | v1.8 | 2026-07-24 | §10: **`main` es el tronco que se mantiene al día**, no "producción" (aclaración del CEO). Actualizarlo es sincronización rutinaria con la rama verde, sin ceremonia ni acta propia. Se registra que IDC **aún no tiene ambiente productivo** (ADR_001 §5 pendiente), por lo que la semántica de despliegue se añadirá cuando exista | ZEUS |
