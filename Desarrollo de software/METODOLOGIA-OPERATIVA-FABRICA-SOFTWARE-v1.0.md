@@ -3,7 +3,7 @@
 | Campo | Detalle |
 |---|---|
 | **Documento** | Metodología Operativa de la Fábrica de Software |
-| **Versión** | v2.1 (2026-07-29) |
+| **Versión** | v2.2 (2026-08-03) |
 | **Fecha** | 2026-07-21 |
 | **Origen** | ACTA-001 (`Gestion-de-proyectos/00-GOBERNANZA/ACTAS/`) |
 | **Base metodológica** | GitHub Spec Kit + modelo híbrido de dos agentes IDC |
@@ -100,8 +100,26 @@ AGENTS.md · .specify/memory/constitution.md · specs/<NNN>/{spec,plan,tasks}.md
 - [archivos que se LEEN, no se tocan] · [qué NO reconciliar / NO silenciar]
 
 ## Señales (ver Regla 3)
+
+## Criterios de auditoría   ← NO se copian: viven en Spec Kit
 ```
 La auditoría de ZEUS corre contra **FR/SC + Acceptance** (`spec.md`) y **T0xx** (`tasks.md`): esos criterios **no se copian** al prompt.
+
+> **Artefacto canónico para llenar:** cada proyecto mantiene la plantilla lista para copiar en su cola
+> de radicaciones — en PI, `03-EJECUCION/radicaciones/PLANTILLA-INSTRUCTIVO-ODIN.md` (nacida en
+> ACTA_ARQ_06, [D-44]). **La plantilla manda sobre la improvisación:** si un radicado no tiene sus
+> secciones, no está bien radicado.
+
+**Regla 1-bis — El diseño va al BRIEF, no al instructivo (v2.0).** Cuando una cola tiene varias SPECs
+que comparten sistema visual, terminología, modelo de datos o criterios transversales, **eso no se
+repite en cada cáscara**: vive en **un brief de diseño único** (entregable de ZEUS en
+`05-ENTREGABLES/`) y **el instructivo lo enlaza**. Dos consecuencias que son la razón de la regla:
+- **ZEUS no redacta specs.** El brief fija *qué se quiere y qué está decidido*; el `spec.md` —con sus
+  FR/SC y Acceptance— **lo redacta ODIN** (§4). Un ZEUS que escribe specs invade la fase de ODIN y
+  duplica la fuente.
+- **Una cola = un radicado.** No se fabrica una cáscara por SPEC como archivo aparte: el instructivo
+  de la cola lleva el bloque único que el CEO pega, y el **orden y los anclajes de código viven en el
+  brief**. Se ejecuta **una SPEC a la vez**, con ventana limpia y compuerta §4 en cada una.
 
 **Regla 2 — ODIN sube su propio trabajo.** ODIN **commitea Y hace push** en el mismo acto: un commit sin push no cumple la Regla de Oro 2 y deja el trabajo solo en la MacStudio, sin respaldo. **ZEUS nunca hace push de código de producto** — no es suyo (§2). Si ZEUS encuentra commits sin subir, los devuelve a ODIN; no los sube.
 
@@ -261,6 +279,7 @@ Nombre **y** ruta del repo. Con eso ningún agente puede equivocarse de producto
 
 | Versión | Fecha | Cambios | Autor |
 |---|---|---|---|
+| v2.2 | 2026-08-03 | §6: se añade **`## Criterios de auditoría`** a la plantilla de cáscara y se declara el **artefacto canónico para llenar** (`radicaciones/PLANTILLA-INSTRUCTIVO-ODIN.md`, [D-44]) — *si un radicado no tiene sus secciones, no está bien radicado*. Nueva **Regla 1-bis: el diseño va al BRIEF, no al instructivo** — cuando una cola comparte sistema visual, terminología, modelo de datos o criterios transversales, eso vive en **un brief único** de ZEUS en `05-ENTREGABLES/` y el instructivo lo **enlaza**; **ZEUS no redacta specs** (las redacta ODIN, §4) y **una cola = un radicado** (no un archivo-cáscara por SPEC), ejecutado **una SPEC a la vez** con ventana limpia y compuerta §4. Motivo: en PROTECCIÓN INFANTIL se fabricaron 14 cáscaras-archivo para la cola 002-PI-058 — el CEO lo corrigió: invadía la fase de ODIN y creaba una segunda fuente de diseño. Se consolidó todo en el brief y se dejó un solo radicado | ZEUS |
 | v1.0 | 2026-07-21 | Versión inicial derivada de ACTA-001 | ZEUS |
 | v1.1 | 2026-07-22 | Añade §12 estándar de control documental (control por carpeta, bloque de control, enlaces relativos, fuente única) | ZEUS |
 | v1.2 | 2026-07-22 | Define "validar despliegue" (app accesible por web para que el CEO pruebe) y hace **condicional** la validación funcional del CEO: obligatoria en funcionalidades completas, opcional en fixes internos (basta auditoría de ZEUS) | ZEUS |
